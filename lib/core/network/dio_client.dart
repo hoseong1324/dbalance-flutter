@@ -9,7 +9,7 @@ class DioClient {
   DioClient._internal();
 
   late Dio _dio;
-  final SecureStorage _storage = SecureStorage();
+  SecureStorage? _storage;
 
   Dio get dio => _dio;
 
@@ -26,7 +26,7 @@ class DioClient {
     ));
 
     // 인터셉터 추가
-    _dio.interceptors.add(AuthInterceptor(_storage));
+    _dio.interceptors.add(AuthInterceptor());
     
     if (kDebugMode) {
       _dio.interceptors.add(LogInterceptor(

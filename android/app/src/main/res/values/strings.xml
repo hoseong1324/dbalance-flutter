@@ -4,4 +4,5 @@
     <string name="default_web_client_id">1052447286041-1rjieb0t4ckp4k60n50v2luogvcl9gr2.apps.googleusercontent.com</string>
     <string name="google_client_id_ios">1052447286041-iaq8igbcrrhmvsdhc5v5ccd1b5j7n06b.apps.googleusercontent.com</string>
     <string name="google_client_id_android">1052447286041-1rjieb0t4ckp4k60n50v2luogvcl9gr2.apps.googleusercontent.com</string>
+    <string name="kakao_native_app_key">21ececcc9510348d55784751f9f01a67</string>
 </resources>

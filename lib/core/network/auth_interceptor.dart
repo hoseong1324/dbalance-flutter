@@ -3,23 +3,22 @@ import 'package:flutter/foundation.dart';
 import '../storage/secure_storage.dart';
 
 class AuthInterceptor extends Interceptor {
-  final SecureStorage _storage;
   bool _isRefreshing = false;
   final List<RequestOptions> _pendingRequests = [];
-
-  AuthInterceptor(this._storage);
 
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
     try {
+      final storage = SecureStorage();
+      
       // X-Session-Token 헤더 추가
-      final sessionToken = await _storage.getSessionToken();
+      final sessionToken = await storage.getSessionToken();
       if (sessionToken != null && sessionToken.isNotEmpty) {
         options.headers['X-Session-Token'] = sessionToken;
       }
 
       // Authorization 헤더 추가 (로그인된 경우)
-      final accessToken = await _storage.getAccessToken();
+      final accessToken = await storage.getAccessToken();
       if (accessToken != null && accessToken.isNotEmpty) {
         options.headers['Authorization'] = 'Bearer $accessToken';
       }
@@ -46,8 +45,9 @@ class AuthInterceptor extends Interceptor {
       _isRefreshing = true;
 
       try {
+        final storage = SecureStorage();
         // Refresh token으로 토큰 갱신 시도
-        final refreshToken = await _storage.getRefreshToken();
+        final refreshToken = await storage.getRefreshToken();
         if (refreshToken != null && refreshToken.isNotEmpty) {
           final dio = Dio();
           final response = await dio.post(
@@ -65,11 +65,11 @@ class AuthInterceptor extends Interceptor {
             final data = response.data;
             if (data is Map<String, dynamic> && data.containsKey('data')) {
               final authData = data['data'];
-              await _storage.saveTokens(
+              await storage.saveTokens(
                 authData['accessToken'],
                 authData['refreshToken'],
               );
-              await _storage.saveUser(authData['user']);
+              await storage.saveUser(authData['user']);
 
               // 원래 요청 재시도
               final retryResponse = await _retryRequest(err.requestOptions);
@@ -86,7 +86,8 @@ class AuthInterceptor extends Interceptor {
       }
 
       // Refresh 실패 시 토큰 삭제 및 로그아웃
-      await _storage.clearAllTokens();
+      final storage = SecureStorage();
+      await storage.clearAllTokens();
       _isRefreshing = false;
     }
 

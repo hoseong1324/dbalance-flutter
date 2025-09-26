@@ -32,12 +32,13 @@ dependencies:
   
   # UI
   cupertino_icons: ^1.0.6
+  flutter_svg: ^2.0.9
   
   # Social Login
   google_sign_in: ^6.1.6
   kakao_flutter_sdk_user: ^1.9.7
   sign_in_with_apple: ^6.1.4
-  flutter_naver_login: ^1.0.0
+  flutter_naver_login: ^2.1.1
   url_launcher: ^6.2.2
   
   # Utils

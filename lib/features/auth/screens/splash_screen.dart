@@ -1,30 +1,49 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../../core/providers/providers.dart';
 
-class SplashScreen extends ConsumerWidget {
+class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    // 세션 부트스트랩 대기
-    ref.watch(sessionBootstrapProvider).when(
-      data: (_) {
-        // 부트스트랩 완료 후 홈으로 이동
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          context.go('/home');
-        });
-      },
-      loading: () {},
-      error: (error, stack) {
-        // 오류 발생 시에도 홈으로 이동
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          context.go('/home');
-        });
-      },
-    );
+  ConsumerState<SplashScreen> createState() => _SplashScreenState();
+}
 
+class _SplashScreenState extends ConsumerState<SplashScreen> {
+  @override
+  void initState() {
+    super.initState();
+    _initializeApp();
+  }
+
+  Future<void> _initializeApp() async {
+    try {
+      print('🚀 앱 초기화 시작');
+      
+      // 잠시 대기 (스플래시 효과)
+      await Future.delayed(const Duration(seconds: 2));
+      
+      print('✅ 초기화 완료, 홈으로 이동');
+      
+      // 홈으로 이동
+      if (mounted) {
+        context.go('/home');
+      }
+    } catch (e) {
+      print('❌ 초기화 오류: $e');
+      
+      if (mounted) {
+        // 오류 발생 시에도 홈으로 이동
+        await Future.delayed(const Duration(seconds: 1));
+        if (mounted) {
+          context.go('/home');
+        }
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF4ECDC4),
       body: Center(
