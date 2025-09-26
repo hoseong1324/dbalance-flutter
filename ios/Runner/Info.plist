@@ -47,6 +47,7 @@
 	<true/>
 	<key>CFBundleURLTypes</key>
 	<array>
+		<!-- Google -->
 		<dict>
 			<key>CFBundleURLName</key>
 			<string>com.dbalance.app</string>
@@ -55,6 +56,7 @@
 				<string>com.googleusercontent.apps.1052447286041-iaq8igbcrrhmvsdhc5v5ccd1b5j7n06b</string>
 			</array>
 		</dict>
+		<!-- Kakao -->
 		<dict>
 			<key>CFBundleURLName</key>
 			<string>kakao</string>
@@ -63,15 +65,36 @@
 				<string>kakao21ececcc9510348d55784751f9f01a67</string>
 			</array>
 		</dict>
+		<!-- Naver (언더바 제거) -->
 		<dict>
 			<key>CFBundleURLName</key>
 			<string>naver</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>dbalance-hQfS5ST--8Q7Mm8g26Cw</string>
+				<string>naverhQfS5ST8Q7Mm8g26Cw</string>
 			</array>
 		</dict>
 	</array>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<!-- Kakao -->
+		<string>kakaokompassauth</string>
+		<string>kakaolink</string>
+		<string>kakaotalk</string>
+		<!-- Naver -->
+		<string>naversearchapp</string>
+		<string>naversearchthirdlogin</string>
+	</array>
+	<!-- 네이버 SDK 설정 (구버전 SDK 호환) -->
+	<key>NaverConsumerKey</key>
+	<string>hQfS5ST__8Q7Mm8g26Cw</string>
+	<key>NaverConsumerSecret</key>
+	<string>kRfF_spWVG</string>
+	<key>NaverServiceAppName</key>
+	<string>디밸런스</string>
+	<key>NaverServiceAppUrlScheme</key>
+	<string>naverhQfS5ST8Q7Mm8g26Cw</string>
+
 	<key>GIDClientID</key>
 	<string>1052447286041-iaq8igbcrrhmvsdhc5v5ccd1b5j7n06b.apps.googleusercontent.com</string>
 </dict>
