@@ -11,7 +11,7 @@ Expense _$ExpenseFromJson(Map<String, dynamic> json) => Expense(
   roomId: (json['roomId'] as num).toInt(),
   roundId: (json['roundId'] as num).toInt(),
   payerParticipantId: (json['payerParticipantId'] as num).toInt(),
-  totalAmount: (json['totalAmount'] as num).toDouble(),
+  totalAmount: (json['totalAmount'] as num).toInt(),
   currency: json['currency'] as String?,
   memo: json['memo'] as String?,
   items: (json['items'] as List<dynamic>)
@@ -34,7 +34,7 @@ ExpenseItem _$ExpenseItemFromJson(Map<String, dynamic> json) => ExpenseItem(
   id: (json['id'] as num).toInt(),
   expenseId: (json['expenseId'] as num).toInt(),
   category: json['category'] as String,
-  amount: (json['amount'] as num).toDouble(),
+  amount: (json['amount'] as num).toInt(),
   participantsOverride: (json['participantsOverride'] as List<dynamic>?)
       ?.map((e) => ParticipantOverride.fromJson(e as Map<String, dynamic>))
       .toList(),

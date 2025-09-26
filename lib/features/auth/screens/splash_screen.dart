@@ -1,65 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../../core/providers/repository_providers.dart';
-import '../providers/auth_provider.dart';
-import '../../sessions/providers/session_provider.dart';
+import '../../../core/providers/providers.dart';
 
-class SplashScreen extends ConsumerStatefulWidget {
+class SplashScreen extends ConsumerWidget {
   const SplashScreen({super.key});
 
   @override
-  ConsumerState<SplashScreen> createState() => _SplashScreenState();
-}
-
-class _SplashScreenState extends ConsumerState<SplashScreen> {
-  @override
-  void initState() {
-    super.initState();
-    _initializeApp();
-  }
-
-  Future<void> _initializeApp() async {
-    try {
-      // Storage 초기화
-      await ref.read(storageServiceProvider).initialize();
-      
-      // API Client 초기화
-      ref.read(apiClientProvider);
-      
-      // 세션 토큰 확인 및 게스트 세션 생성
-      final sessionToken = await ref.read(storageServiceProvider).getSessionToken();
-      if (sessionToken == null || sessionToken.isEmpty) {
-        await ref.read(sessionProvider.notifier).createGuestSession();
-        // 게스트 세션 생성 후 게스트 상태로 설정
-        ref.read(authStateProvider.notifier).setGuest();
-      } else {
-        // 인증 상태 초기화 (기존 토큰 확인)
-        await ref.read(authStateProvider.notifier).initialize();
-      }
-      
-      // 잠시 대기 (스플래시 효과)
-      await Future.delayed(const Duration(seconds: 1));
-      
-      // 홈으로 이동
-      if (mounted) {
-        context.go('/home');
-      }
-    } catch (e) {
-      print('❌ 초기화 오류: $e');
-      
-      if (mounted) {
-        // 오류 발생 시에도 홈으로 이동 시도
-        await Future.delayed(const Duration(seconds: 1));
-        if (mounted) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    // 세션 부트스트랩 대기
+    ref.watch(sessionBootstrapProvider).when(
+      data: (_) {
+        // 부트스트랩 완료 후 홈으로 이동
+        WidgetsBinding.instance.addPostFrameCallback((_) {
           context.go('/home');
-        }
-      }
-    }
-  }
+        });
+      },
+      loading: () {},
+      error: (error, stack) {
+        // 오류 발생 시에도 홈으로 이동
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          context.go('/home');
+        });
+      },
+    );
 
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF4ECDC4),
       body: Center(

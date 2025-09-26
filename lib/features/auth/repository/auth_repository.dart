@@ -1,18 +1,26 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import '../../../core/network/api_client.dart';
-import '../dto/auth_dto.dart';
+import '../../../core/network/dio_client.dart';
+import '../../../shared/models/user.dart';
 
 class AuthRepository {
-  final ApiClient _apiClient = ApiClient();
+  final DioClient _dioClient = DioClient();
 
   /// 회원가입
-  Future<AuthResponse> register(RegisterRequest request) async {
+  Future<Map<String, dynamic>> register({
+    required String email,
+    required String password,
+    String? nickname,
+  }) async {
     try {
-      final response = await _apiClient.dio.post('/auth/register', data: request.toJson());
-      
+      final response = await _dioClient.dio.post('/auth/register', data: {
+        'email': email,
+        'password': password,
+        if (nickname != null) 'nickname': nickname,
+      });
+
       if (response.statusCode == 200 || response.statusCode == 201) {
-        return AuthResponse.fromJson(response.data);
+        return response.data;
       } else {
         throw Exception('회원가입 실패: ${response.statusCode}');
       }
@@ -27,13 +35,19 @@ class AuthRepository {
     }
   }
 
-  /// 로컬 로그인
-  Future<AuthResponse> login(LoginRequest request) async {
+  /// 로그인
+  Future<Map<String, dynamic>> login({
+    required String email,
+    required String password,
+  }) async {
     try {
-      final response = await _apiClient.dio.post('/auth/login', data: request.toJson());
-      
+      final response = await _dioClient.dio.post('/auth/login', data: {
+        'email': email,
+        'password': password,
+      });
+
       if (response.statusCode == 200) {
-        return AuthResponse.fromJson(response.data);
+        return response.data;
       } else {
         throw Exception('로그인 실패: ${response.statusCode}');
       }
@@ -49,12 +63,24 @@ class AuthRepository {
   }
 
   /// 소셜 로그인
-  Future<AuthResponse> socialLogin(SocialLoginRequest request) async {
+  Future<Map<String, dynamic>> socialLogin({
+    required String provider,
+    String? idToken,
+    String? accessToken,
+    String? device,
+    String? nonce,
+  }) async {
     try {
-      final response = await _apiClient.dio.post('/auth/social-login', data: request.toJson());
-      
+      final response = await _dioClient.dio.post('/auth/social-login', data: {
+        'provider': provider,
+        if (idToken != null) 'idToken': idToken,
+        if (accessToken != null) 'accessToken': accessToken,
+        if (device != null) 'device': device,
+        if (nonce != null) 'nonce': nonce,
+      });
+
       if (response.statusCode == 200 || response.statusCode == 201) {
-        return AuthResponse.fromJson(response.data);
+        return response.data;
       } else {
         throw Exception('소셜 로그인 실패: ${response.statusCode}');
       }
@@ -69,19 +95,21 @@ class AuthRepository {
     }
   }
 
-  /// 토큰 재발급
-  Future<AuthResponse> refresh(RefreshRequest request) async {
+  /// 토큰 갱신
+  Future<Map<String, dynamic>> refresh(String refreshToken) async {
     try {
-      final response = await _apiClient.dio.post('/auth/refresh', data: request.toJson());
-      
+      final response = await _dioClient.dio.post('/auth/refresh', data: {
+        'refreshToken': refreshToken,
+      });
+
       if (response.statusCode == 200) {
-        return AuthResponse.fromJson(response.data);
+        return response.data;
       } else {
-        throw Exception('토큰 재발급 실패: ${response.statusCode}');
+        throw Exception('토큰 갱신 실패: ${response.statusCode}');
       }
     } on DioException catch (e) {
       if (kDebugMode) {
-        print('토큰 재발급 오류: ${e.message}');
+        print('토큰 갱신 오류: ${e.message}');
         if (e.response?.data != null) {
           print('응답: ${e.response?.data}');
         }

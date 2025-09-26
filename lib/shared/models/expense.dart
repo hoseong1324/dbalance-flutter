@@ -8,7 +8,7 @@ class Expense {
   final int roomId;
   final int roundId;
   final int payerParticipantId;
-  final double totalAmount;
+  final int totalAmount;
   final String? currency;
   final String? memo;
   final List<ExpenseItem> items;
@@ -33,7 +33,7 @@ class ExpenseItem {
   final int id;
   final int expenseId;
   final String category;
-  final double amount;
+  final int amount;
   final List<ParticipantOverride>? participantsOverride;
 
   const ExpenseItem({

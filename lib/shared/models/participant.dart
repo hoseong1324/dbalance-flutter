@@ -23,7 +23,7 @@ class RoomParticipant {
   final int id;
   final int roomId;
   final int participantId;
-  final double attendWeight;
+  final String attendWeight;
   final bool? isDrinker;
 
   const RoomParticipant({

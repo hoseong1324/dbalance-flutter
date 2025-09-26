@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../../core/providers/repository_providers.dart';
-import '../../auth/providers/auth_provider.dart';
-import 'room_detail_screen.dart';
+import '../../../core/providers/providers.dart';
+import '../../../shared/models/room.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -30,12 +29,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     }
 
     try {
-      final room = await ref.read(roomsRepositoryProvider).createRoom(
+      final roomsRepo = ref.read(roomsRepositoryProvider);
+      final room = await roomsRepo.createRoom(
         name: _roomNameController.text.trim(),
       );
 
       if (mounted) {
-        context.push('/room/${room.id}');
+        context.push('/rooms/${room.id}');
         _roomNameController.clear();
       }
     } catch (e) {
@@ -87,11 +87,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   Future<void> _logout() async {
     try {
-      await ref.read(storageServiceProvider).clearAllTokens();
-      ref.read(authStateProvider.notifier).setSignedOut();
+      final storage = ref.read(secureStorageProvider);
+      await storage.clearAllTokens();
+      ref.read(authStateProvider.notifier).setGuest();
       
       if (mounted) {
-        context.go('/login');
+        context.go('/home');
       }
     } catch (e) {
       if (mounted) {
@@ -104,7 +105,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isSignedIn = ref.watch(isSignedInProvider);
+    final authState = ref.watch(authStateProvider);
+    final roomsAsync = ref.watch(roomsRecentProvider);
 
     return Scaffold(
       backgroundColor: Colors.grey.shade50,
@@ -119,9 +121,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           ),
         ),
         actions: [
-          if (!isSignedIn)
+          if (authState == AuthState.guest)
             TextButton(
-              onPressed: () => context.push('/login'),
+              onPressed: () => context.push('/auth/login'),
               child: const Text(
                 '로그인',
                 style: TextStyle(
@@ -130,7 +132,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 ),
               ),
             ),
-          if (isSignedIn)
+          if (authState == AuthState.signedIn)
             IconButton(
               icon: const Icon(Icons.logout),
               onPressed: _logout,
@@ -154,7 +156,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      isSignedIn ? '안녕하세요!' : '게스트로 이용 중',
+                      authState == AuthState.signedIn ? '안녕하세요!' : '게스트로 이용 중',
                       style: const TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
@@ -163,9 +165,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      isSignedIn 
-                          ? '새로운 정산을 시작해보세요'
-                          : '로그인하면 더 많은 기능을 이용할 수 있습니다',
+                      authState == AuthState.signedIn 
+                          ? '최근 방 목록을 확인해보세요'
+                          : '게스트는 최근 3개까지만 보여요. 로그인하면 전체 보기',
                       style: const TextStyle(
                         fontSize: 16,
                         color: Colors.white70,
@@ -174,69 +176,120 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   ],
                 ),
               ),
-              const SizedBox(height: 32),
-              
-              // 새 방 만들기 버튼
-              ElevatedButton.icon(
-                onPressed: _showCreateRoomDialog,
-                icon: const Icon(Icons.add),
-                label: const Text('새 방 만들기'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF4ECDC4),
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-              ),
               const SizedBox(height: 24),
               
-              // 최근 방 목록 (임시)
-              const Text(
-                '최근 방',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                  color: Color(0xFF2C3E50),
-                ),
-              ),
-              const SizedBox(height: 16),
-              
-              // 빈 상태 메시지
+              // 최근 방 목록
               Expanded(
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.meeting_room_outlined,
-                        size: 64,
-                        color: Colors.grey.shade400,
-                      ),
-                      const SizedBox(height: 16),
-                      Text(
-                        '아직 생성된 방이 없습니다',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.grey.shade600,
+                child: roomsAsync.when(
+                  data: (rooms) {
+                    if (rooms.isEmpty) {
+                      return Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.meeting_room_outlined,
+                              size: 64,
+                              color: Colors.grey.shade400,
+                            ),
+                            const SizedBox(height: 16),
+                            Text(
+                              '아직 방이 없습니다',
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: Colors.grey.shade600,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              '새 방을 만들어보세요!',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.grey.shade500,
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        '새 방 만들기 버튼을 눌러 시작해보세요',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey.shade500,
+                      );
+                    }
+
+                    return ListView.builder(
+                      itemCount: rooms.length,
+                      itemBuilder: (context, index) {
+                        final room = rooms[index] as Room;
+                        return Card(
+                          margin: const EdgeInsets.only(bottom: 12),
+                          child: ListTile(
+                            leading: CircleAvatar(
+                              backgroundColor: const Color(0xFF4ECDC4).withOpacity(0.1),
+                              child: const Icon(
+                                Icons.meeting_room,
+                                color: Color(0xFF4ECDC4),
+                              ),
+                            ),
+                            title: Text(
+                              room.name,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            subtitle: Text(
+                              room.date ?? '날짜 미정',
+                              style: TextStyle(
+                                color: Colors.grey.shade600,
+                              ),
+                            ),
+                            trailing: const Icon(Icons.arrow_forward_ios),
+                            onTap: () {
+                              context.push('/rooms/${room.id}');
+                            },
+                          ),
+                        );
+                      },
+                    );
+                  },
+                  loading: () => const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                  error: (error, stack) => Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.error_outline,
+                          size: 64,
+                          color: Colors.red.shade400,
                         ),
-                      ),
-                    ],
+                        const SizedBox(height: 16),
+                        Text(
+                          '방 목록을 불러올 수 없습니다',
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.grey.shade600,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          error.toString(),
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey.shade500,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
             ],
           ),
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _showCreateRoomDialog,
+        backgroundColor: const Color(0xFF4ECDC4),
+        child: const Icon(Icons.add, color: Colors.white),
       ),
     );
   }

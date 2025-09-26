@@ -8,16 +8,20 @@ class Room {
   final String name;
   final String? date;
   final String? inviteCode;
-  final int? ownerUserId;
-  final int? ownerSessionId;
+  final int? ownerUser;
+  final int? ownerSession;
+  final String? createdAt;
+  final String? updatedAt;
 
   const Room({
     required this.id,
     required this.name,
     this.date,
     this.inviteCode,
-    this.ownerUserId,
-    this.ownerSessionId,
+    this.ownerUser,
+    this.ownerSession,
+    this.createdAt,
+    this.updatedAt,
   });
 
   factory Room.fromJson(Map<String, dynamic> json) => _$RoomFromJson(json);
@@ -31,6 +35,7 @@ class Round {
   final int roundNumber;
   final String? placeName;
   final String? memo;
+  final String? createdAt;
 
   const Round({
     required this.id,
@@ -38,6 +43,7 @@ class Round {
     required this.roundNumber,
     this.placeName,
     this.memo,
+    this.createdAt,
   });
 
   factory Round.fromJson(Map<String, dynamic> json) => _$RoundFromJson(json);

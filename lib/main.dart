@@ -19,34 +19,14 @@ class DBalanceApp extends ConsumerWidget {
     
     return MaterialApp.router(
       title: 'D-Balance',
-      debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        primarySwatch: Colors.teal,
+        primaryColor: const Color(0xFF4ECDC4),
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+        useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
           seedColor: const Color(0xFF4ECDC4),
           brightness: Brightness.light,
-        ),
-        useMaterial3: true,
-        appBarTheme: const AppBarTheme(
-          centerTitle: true,
-          elevation: 0,
-        ),
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFF4ECDC4),
-            foregroundColor: Colors.white,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-          ),
-        ),
-        inputDecorationTheme: InputDecorationTheme(
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 16,
-            vertical: 12,
-          ),
         ),
       ),
       routerConfig: router,

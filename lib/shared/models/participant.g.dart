@@ -24,7 +24,7 @@ RoomParticipant _$RoomParticipantFromJson(Map<String, dynamic> json) =>
       id: (json['id'] as num).toInt(),
       roomId: (json['roomId'] as num).toInt(),
       participantId: (json['participantId'] as num).toInt(),
-      attendWeight: (json['attendWeight'] as num).toDouble(),
+      attendWeight: json['attendWeight'] as String,
       isDrinker: json['isDrinker'] as bool?,
     );
 
