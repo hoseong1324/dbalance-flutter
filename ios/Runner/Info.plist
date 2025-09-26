@@ -65,13 +65,13 @@
 				<string>kakao21ececcc9510348d55784751f9f01a67</string>
 			</array>
 		</dict>
-		<!-- Naver (언더바 제거) -->
+		<!-- Naver -->
 		<dict>
 			<key>CFBundleURLName</key>
 			<string>naver</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>naverhQfS5ST8Q7Mm8g26Cw</string>
+				<string>naverhQfS5ST__8Q7Mm8g26Cw</string>
 			</array>
 		</dict>
 	</array>
@@ -85,15 +85,18 @@
 		<string>naversearchapp</string>
 		<string>naversearchthirdlogin</string>
 	</array>
-	<!-- 네이버 SDK 설정 (구버전 SDK 호환) -->
-	<key>NaverConsumerKey</key>
+	<!-- 신 SDK(Nid) 키들: 루트 레벨 -->
+	<key>NidUrlScheme</key>
+	<string>naverhQfS5ST__8Q7Mm8g26Cw</string>
+	
+	<key>NidClientID</key>
 	<string>hQfS5ST__8Q7Mm8g26Cw</string>
-	<key>NaverConsumerSecret</key>
+	
+	<key>NidClientSecret</key>
 	<string>kRfF_spWVG</string>
-	<key>NaverServiceAppName</key>
+	
+	<key>NidAppName</key>
 	<string>디밸런스</string>
-	<key>NaverServiceAppUrlScheme</key>
-	<string>naverhQfS5ST8Q7Mm8g26Cw</string>
 
 	<key>GIDClientID</key>
 	<string>1052447286041-iaq8igbcrrhmvsdhc5v5ccd1b5j7n06b.apps.googleusercontent.com</string>

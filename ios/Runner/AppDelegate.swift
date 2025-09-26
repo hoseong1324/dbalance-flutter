@@ -3,17 +3,18 @@ import Flutter
 
 @UIApplicationMain
 class AppDelegate: FlutterAppDelegate {
+  override func application(
+    _ application: UIApplication,
+    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
+  ) -> Bool {
 
-  override func application(_ application: UIApplication,
-                            didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-
-    // 플러그인 자동 등록 (MissingPluginException 방지)
+    // 플러그인 자동 등록 (필수)
     GeneratedPluginRegistrant.register(with: self)
 
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
 
-  // URL 콜백 처리
+  // URL 핸들링은 플러그인이 처리하므로 기본 그대로 둔다
   override func application(_ app: UIApplication,
                             open url: URL,
                             options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
