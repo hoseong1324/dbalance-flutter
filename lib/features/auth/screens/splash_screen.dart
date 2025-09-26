@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import '../../../core/providers/repository_providers.dart';
 import '../providers/auth_provider.dart';
 import '../../sessions/providers/session_provider.dart';
@@ -40,7 +41,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
       
       // 홈으로 이동
       if (mounted) {
-        Navigator.of(context).pushReplacementNamed('/home');
+        context.go('/home');
       }
     } catch (e) {
       if (mounted) {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import '../../../core/providers/repository_providers.dart';
 import '../providers/auth_provider.dart';
 import '../dto/auth_dto.dart';
@@ -55,7 +56,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
       ref.read(authStateProvider.notifier).setSignedIn();
       
       if (mounted) {
-        Navigator.of(context).pushReplacementNamed('/home');
+        context.go('/home');
       }
     } catch (e) {
       if (mounted) {
@@ -79,7 +80,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Color(0xFF2C3E50)),
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () => context.pop(),
         ),
       ),
       body: SafeArea(
@@ -221,7 +222,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                   // 로그인 링크
                   TextButton(
                     onPressed: () {
-                      Navigator.of(context).pop();
+                      context.pop();
                     },
                     child: const Text(
                       '이미 계정이 있으신가요? 로그인',

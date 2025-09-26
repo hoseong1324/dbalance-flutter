@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import '../../../core/providers/repository_providers.dart';
 import '../providers/auth_provider.dart';
 import '../dto/auth_dto.dart';
@@ -47,7 +48,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       ref.read(authStateProvider.notifier).setSignedIn();
       
       if (mounted) {
-        Navigator.of(context).pushReplacementNamed('/home');
+        context.go('/home');
       }
     } catch (e) {
       if (mounted) {
@@ -184,7 +185,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 // 회원가입 링크
                 TextButton(
                   onPressed: () {
-                    Navigator.of(context).pushNamed('/signup');
+                    context.push('/signup');
                   },
                   child: const Text(
                     '계정이 없으신가요? 회원가입',
@@ -206,16 +207,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     _buildSocialButton(Icons.g_mobiledata, 'Google', () {
-                      Navigator.of(context).pushNamed('/social-login', arguments: 'google');
+                      context.push('/social-login?provider=google');
                     }),
                     _buildSocialButton(Icons.apple, 'Apple', () {
-                      Navigator.of(context).pushNamed('/social-login', arguments: 'apple');
+                      context.push('/social-login?provider=apple');
                     }),
                     _buildSocialButton(Icons.chat_bubble_outline, 'Kakao', () {
-                      Navigator.of(context).pushNamed('/social-login', arguments: 'kakao');
+                      context.push('/social-login?provider=kakao');
                     }),
                     _buildSocialButton(Icons.search, 'Naver', () {
-                      Navigator.of(context).pushNamed('/social-login', arguments: 'naver');
+                      context.push('/social-login?provider=naver');
                     }),
                   ],
                 ),

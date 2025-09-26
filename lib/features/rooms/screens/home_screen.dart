@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import '../../../core/providers/repository_providers.dart';
 import '../../auth/providers/auth_provider.dart';
 import 'room_detail_screen.dart';
@@ -94,7 +95,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       ref.read(authStateProvider.notifier).setSignedOut();
       
       if (mounted) {
-        Navigator.of(context).pushReplacementNamed('/login');
+        context.go('/login');
       }
     } catch (e) {
       if (mounted) {
