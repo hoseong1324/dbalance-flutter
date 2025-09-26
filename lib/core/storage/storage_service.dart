@@ -79,6 +79,12 @@ class StorageService {
     await _secureStorage.delete(key: AppConfig.userKey);
   }
 
+  /// Access Token과 Refresh Token을 함께 저장
+  Future<void> saveTokens(String accessToken, String refreshToken) async {
+    await saveAccessToken(accessToken);
+    await saveRefreshToken(refreshToken);
+  }
+
   /// 모든 토큰 삭제 (로그아웃)
   Future<void> clearAllTokens() async {
     await _secureStorage.deleteAll();

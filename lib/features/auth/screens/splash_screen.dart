@@ -31,10 +31,12 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
       final sessionToken = await ref.read(storageServiceProvider).getSessionToken();
       if (sessionToken == null || sessionToken.isEmpty) {
         await ref.read(sessionProvider.notifier).createGuestSession();
+        // 게스트 세션 생성 후 게스트 상태로 설정
+        ref.read(authStateProvider.notifier).setGuest();
+      } else {
+        // 인증 상태 초기화 (기존 토큰 확인)
+        await ref.read(authStateProvider.notifier).initialize();
       }
-      
-      // 인증 상태 초기화
-      await ref.read(authStateProvider.notifier).initialize();
       
       // 잠시 대기 (스플래시 효과)
       await Future.delayed(const Duration(seconds: 2));
