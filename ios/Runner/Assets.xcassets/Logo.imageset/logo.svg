@@ -1,0 +1,27 @@
+<svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <!-- 배경 원 -->
+  <circle cx="60" cy="60" r="55" fill="#4ECDC4" stroke="none"/>
+  
+  <!-- 균형 저울 -->
+  <g transform="translate(60, 60)">
+    <!-- 수직 기둥 -->
+    <rect x="-2" y="-40" width="4" height="80" fill="#F5F5DC" rx="2"/>
+    
+    <!-- 수평 막대 -->
+    <rect x="-30" y="-2" width="60" height="4" fill="#F5F5DC" rx="2"/>
+    
+    <!-- 왼쪽 접시 -->
+    <path d="M -25 -2 L -35 8 L -15 8 Z" fill="#F5F5DC"/>
+    <rect x="-27" y="8" width="24" height="2" fill="#F5F5DC" rx="1"/>
+    
+    <!-- 오른쪽 접시 -->
+    <path d="M 25 -2 L 15 8 L 35 8 Z" fill="#F5F5DC"/>
+    <rect x="3" y="8" width="24" height="2" fill="#F5F5DC" rx="1"/>
+    
+    <!-- 왼쪽 접시 연결선 -->
+    <line x1="-25" y1="-2" x2="-25" y2="8" stroke="#F5F5DC" stroke-width="2"/>
+    
+    <!-- 오른쪽 접시 연결선 -->
+    <line x1="25" y1="-2" x2="25" y2="8" stroke="#F5F5DC" stroke-width="2"/>
+  </g>
+</svg>
