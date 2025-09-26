@@ -35,11 +35,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       );
 
       if (mounted) {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => RoomDetailScreen(roomId: room.id),
-          ),
-        );
+        context.push('/room/${room.id}');
         _roomNameController.clear();
       }
     } catch (e) {
@@ -68,14 +64,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         actions: [
           TextButton(
             onPressed: () {
-              Navigator.of(context).pop();
+              context.pop();
               _roomNameController.clear();
             },
             child: const Text('취소'),
           ),
           ElevatedButton(
             onPressed: () {
-              Navigator.of(context).pop();
+              context.pop();
               _createRoom();
             },
             style: ElevatedButton.styleFrom(
@@ -123,6 +119,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           ),
         ),
         actions: [
+          if (!isSignedIn)
+            TextButton(
+              onPressed: () => context.push('/login'),
+              child: const Text(
+                '로그인',
+                style: TextStyle(
+                  color: Color(0xFF4ECDC4),
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
           if (isSignedIn)
             IconButton(
               icon: const Icon(Icons.logout),

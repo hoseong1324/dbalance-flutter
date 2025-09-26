@@ -64,8 +64,11 @@ final routerProvider = Provider<GoRouter>((ref) {
       final currentLocation = state.fullPath ?? '/';
       final authState = ref.read(authStateProvider);
       
+      print('🔄 라우터 리다이렉트 체크: $currentLocation, AuthState: $authState');
+      
       // 스플래시 화면에서는 리다이렉트하지 않음
       if (currentLocation == '/splash') {
+        print('✅ 스플래시 화면 - 리다이렉트 없음');
         return null;
       }
       
@@ -74,6 +77,7 @@ final routerProvider = Provider<GoRouter>((ref) {
           !currentLocation.startsWith('/login') && 
           !currentLocation.startsWith('/signup') &&
           !currentLocation.startsWith('/social-login')) {
+        print('🔒 로그인 필요 - 로그인 화면으로 리다이렉트');
         return '/login';
       }
       
@@ -81,9 +85,11 @@ final routerProvider = Provider<GoRouter>((ref) {
       if ((authState == AuthState.signedIn || authState == AuthState.guest) && 
           (currentLocation.startsWith('/login') || 
            currentLocation.startsWith('/signup'))) {
+        print('🏠 이미 인증됨 - 홈으로 리다이렉트');
         return '/home';
       }
       
+      print('✅ 리다이렉트 없음 - 정상 진행');
       return null;
     },
     

@@ -39,17 +39,21 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
       }
       
       // 잠시 대기 (스플래시 효과)
-      await Future.delayed(const Duration(seconds: 2));
+      await Future.delayed(const Duration(seconds: 1));
       
       // 홈으로 이동
       if (mounted) {
         context.go('/home');
       }
     } catch (e) {
+      print('❌ 초기화 오류: $e');
+      
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('초기화 오류: $e')),
-        );
+        // 오류 발생 시에도 홈으로 이동 시도
+        await Future.delayed(const Duration(seconds: 1));
+        if (mounted) {
+          context.go('/home');
+        }
       }
     }
   }

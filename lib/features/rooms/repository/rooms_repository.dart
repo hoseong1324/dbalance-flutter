@@ -21,7 +21,17 @@ class RoomsRepository {
       });
       
       if (response.statusCode == 200 || response.statusCode == 201) {
-        return Room.fromJson(response.data);
+        // 서버 응답 구조 확인
+        if (response.data is Map<String, dynamic>) {
+          final data = response.data as Map<String, dynamic>;
+          if (data.containsKey('data')) {
+            return Room.fromJson(data['data']);
+          } else {
+            return Room.fromJson(data);
+          }
+        } else {
+          return Room.fromJson(response.data);
+        }
       } else {
         throw Exception('방 생성 실패: ${response.statusCode}');
       }
